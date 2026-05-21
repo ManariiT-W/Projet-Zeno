@@ -1,1415 +1,646 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Zeno — Crée ton Influenceur IA</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
-      rel="stylesheet"
-    />
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              "zen-bg": "#0a0a0f",
-              "zen-violet": "#7b61ff",
-              "zen-cyan": "#00d4ff",
-              "zen-muted": "#a0a0b0",
-              "zen-card": "#0d0d1f",
-              "zen-footer": "#060610",
-              "zen-green": "#1D9E75",
-              "zen-gold": "#C9A84C",
-            },
-            fontFamily: {
-              heading: ["Syne", "sans-serif"],
-              body: ["DM Sans", "sans-serif"],
-            },
-          },
-        },
-      };
-    </script>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      html {
-        scroll-behavior: smooth;
-      }
-      body {
-        font-family: "DM Sans", sans-serif;
-        background: #0a0a0f;
-        color: #fff;
-        overflow-x: hidden;
-      }
-      h1,
-      h2,
-      h3,
-      h4,
-      th {
-        font-family: "Syne", sans-serif;
-      }
-      ::-webkit-scrollbar {
-        width: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #0a0a0f;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #7b61ff;
-        border-radius: 3px;
-      }
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(30px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .anim-up {
-        animation: fadeInUp 0.8s ease-out forwards;
-        opacity: 0;
-      }
-      .d1 {
-        animation-delay: 0.15s;
-      }
-      .d2 {
-        animation-delay: 0.3s;
-      }
-      .d3 {
-        animation-delay: 0.45s;
-      }
-      .d4 {
-        animation-delay: 0.6s;
-      }
-      .d5 {
-        animation-delay: 0.75s;
-      }
-      .card-glow {
-        transition: all 0.3s ease;
-      }
-      .card-glow:hover {
-        box-shadow: 0 0 30px rgba(123, 97, 255, 0.15),
-          0 0 60px rgba(0, 212, 255, 0.05);
-        border-color: rgba(123, 97, 255, 0.5) !important;
-      }
-      .btn-cyan {
-        background: #00d4ff;
-        color: #0a0a0f;
-        transition: all 0.3s ease;
-      }
-      .btn-cyan:hover {
-        box-shadow: 0 0 25px rgba(0, 212, 255, 0.4);
-        transform: translateY(-1px);
-      }
-      .btn-violet {
-        background: #7b61ff;
-        color: #fff;
-        transition: all 0.3s ease;
-      }
-      .btn-violet:hover {
-        box-shadow: 0 0 25px rgba(123, 97, 255, 0.45);
-        transform: translateY(-1px);
-      }
-      .toggle-track {
-        position: relative;
-        width: 52px;
-        height: 26px;
-        border-radius: 13px;
-        background: rgba(123, 97, 255, 0.2);
-        border: 1px solid rgba(123, 97, 255, 0.3);
-        cursor: pointer;
-        transition: 0.3s;
-      }
-      .toggle-track.on {
-        background: rgba(123, 97, 255, 0.45);
-        border-color: rgba(123, 97, 255, 0.6);
-      }
-      .toggle-dot {
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: #7b61ff;
-        transition: 0.3s;
-      }
-      .toggle-track.on .toggle-dot {
-        left: 28px;
-      }
-      .glass {
-        background: rgba(10, 10, 15, 0.85);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-      }
-    </style>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="text/babel">
-      const { useState, useEffect, useRef, useCallback } = React;
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zeno — Crée ton Influenceur IA</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{'zen-bg':'#0a0a0f','zen-violet':'#7b61ff','zen-cyan':'#00d4ff','zen-muted':'#a0a0b0','zen-card':'#0d0d1f','zen-footer':'#060610','zen-green':'#1D9E75','zen-gold':'#C9A84C'},fontFamily:{'heading':['Syne','sans-serif'],'body':['DM Sans','sans-serif']}}}}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:#0a0a0f;color:#fff;overflow-x:hidden}
+h1,h2,h3,h4,th{font-family:'Syne',sans-serif}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0a0a0f}
+::-webkit-scrollbar-thumb{background:#7b61ff;border-radius:3px}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.anim-up{animation:fadeInUp .8s ease-out forwards;opacity:0}
+.d1{animation-delay:.15s}.d2{animation-delay:.3s}.d3{animation-delay:.45s}.d4{animation-delay:.6s}.d5{animation-delay:.75s}
+.card-glow{transition:all .3s ease}
+.card-glow:hover{box-shadow:0 0 30px rgba(123,97,255,.15),0 0 60px rgba(0,212,255,.05);border-color:rgba(123,97,255,.5)!important}
+.btn-cyan{background:#00d4ff;color:#0a0a0f;transition:all .3s ease}
+.btn-cyan:hover{box-shadow:0 0 25px rgba(0,212,255,.4);transform:translateY(-1px)}
+.btn-violet{background:#7b61ff;color:#fff;transition:all .3s ease}
+.btn-violet:hover{box-shadow:0 0 25px rgba(123,97,255,.45);transform:translateY(-1px)}
+.toggle-track{position:relative;width:52px;height:26px;border-radius:13px;background:rgba(123,97,255,.2);border:1px solid rgba(123,97,255,.3);cursor:pointer;transition:.3s}
+.toggle-track.on{background:rgba(123,97,255,.45);border-color:rgba(123,97,255,.6)}
+.toggle-dot{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#7b61ff;transition:.3s}
+.toggle-track.on .toggle-dot{left:28px}
+.glass{background:rgba(10,10,15,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const{useState,useEffect,useRef,useCallback}=React;
 
-      /* ───── SCROLL HELPER ───── */
-      function scrollTo(id) {
-        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-      }
+/* ───── SCROLL HELPER ───── */
+function scrollTo(id){
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+}
 
-      /* ───── NAVBAR ───── */
-      function Navbar({ active }) {
-        const [open, setOpen] = useState(false);
-        const links = [
-          ["accueil", "Accueil"],
-          ["about", "À propos"],
-          ["creations", "Créations"],
-          ["tarifs", "Tarifs"],
-        ];
-        return (
-          <nav
-            className="fixed top-0 left-0 right-0 glass"
-            style={{ zIndex: 50, height: 60 }}
-          >
-            <div className="max-w-7xl mx-auto h-full flex items-center justify-between px-5">
-              <img
-                src="/logo.png"
-                alt="Zeno"
-                className="h-8 object-contain"
-                onError={(e) => {
-                  e.target.style.display = "none";
-                  const s = document.createElement("span");
-                  s.textContent = "ZENO";
-                  s.style.cssText =
-                    "font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:#7b61ff;letter-spacing:2px";
-                  e.target.parentNode.insertBefore(s, e.target);
-                }}
-              />
-              <div className="hidden md:flex items-center gap-8">
-                {links.map(([id, label]) => (
-                  <button
-                    key={id}
-                    onClick={() => scrollTo(id)}
-                    className={`text-sm font-medium transition-colors pb-0.5 border-b-2 ${
-                      active === id
-                        ? "text-white border-zen-violet"
-                        : "text-zen-muted border-transparent hover:text-zen-violet"
-                    }`}
-                    style={active !== id ? { textShadow: "none" } : {}}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-              <button
-                onClick={() => scrollTo("tarifs")}
-                className="hidden md:block btn-cyan font-semibold text-sm px-5 py-2 rounded-lg"
-              >
-                Commencer gratuitement
-              </button>
-              <button
-                className="md:hidden text-white"
-                onClick={() => setOpen(!open)}
-              >
-                <iconify-icon
-                  icon={open ? "lucide:x" : "lucide:menu"}
-                  width="24"
-                />
-              </button>
+/* ───── NAVBAR ───── */
+function Navbar({active}){
+  const[open,setOpen]=useState(false);
+  const links=[['accueil','Accueil'],['about','À propos'],['creations','Créations'],['tarifs','Tarifs']];
+  return(
+    <nav className="fixed top-0 left-0 right-0 glass" style={{zIndex:50,height:60}}>
+      <div className="max-w-7xl mx-auto h-full flex items-center justify-between px-5">
+        <img src="/logo.png" alt="Zeno" className="h-8 object-contain" onError={e=>{e.target.style.display='none';const s=document.createElement('span');s.textContent='ZENO';s.style.cssText="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:#7b61ff;letter-spacing:2px";e.target.parentNode.insertBefore(s,e.target)}}/>
+        <div className="hidden md:flex items-center gap-8">
+          {links.map(([id,label])=>(
+            <button key={id} onClick={()=>scrollTo(id)}
+              className={`text-sm font-medium transition-colors pb-0.5 border-b-2 ${active===id?'text-white border-zen-violet':'text-zen-muted border-transparent hover:text-zen-violet'}`}
+              style={active!==id?{textShadow:'none'}:{}}>
+              {label}
+            </button>
+          ))}
+        </div>
+        <button onClick={()=>scrollTo('tarifs')} className="hidden md:block btn-cyan font-semibold text-sm px-5 py-2 rounded-lg">
+          Commencer gratuitement
+        </button>
+        <button className="md:hidden text-white" onClick={()=>setOpen(!open)}>
+          <iconify-icon icon={open?'lucide:x':'lucide:menu'} width="24"/>
+        </button>
+      </div>
+      {open&&(
+        <div className="md:hidden glass border-t border-white/5 px-5 py-4 flex flex-col gap-4">
+          {links.map(([id,label])=>(
+            <button key={id} onClick={()=>{scrollTo(id);setOpen(false)}}
+              className={`text-sm font-medium text-left ${active===id?'text-zen-violet':'text-zen-muted'}`}>{label}</button>
+          ))}
+          <button onClick={()=>{scrollTo('tarifs');setOpen(false)}} className="btn-cyan font-semibold text-sm px-5 py-2 rounded-lg w-full">Commencer gratuitement</button>
+        </div>
+      )}
+    </nav>
+  );
+}
+
+/* ───── VIDEO MODAL ───── */
+function VideoModal({onClose}){
+  useEffect(()=>{
+    const h=e=>{if(e.key==='Escape')onClose()};
+    window.addEventListener('keydown',h);
+    return()=>window.removeEventListener('keydown',h);
+  },[onClose]);
+  return(
+    <div className="fixed inset-0 flex items-center justify-center p-4" style={{zIndex:100}} onClick={onClose}>
+      <div className="absolute inset-0 bg-black/80"/>
+      <div className="relative w-full max-w-3xl" onClick={e=>e.stopPropagation()}>
+        <button onClick={onClose} className="absolute -top-10 right-0 text-zen-muted hover:text-white transition-colors">
+          <iconify-icon icon="lucide:x" width="24"/>
+        </button>
+        <div className="rounded-2xl overflow-hidden border border-white/10" style={{aspectRatio:'16/9',background:'#0d0d1f'}}>
+          <div className="w-full h-full flex flex-col items-center justify-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-zen-violet/20 flex items-center justify-center">
+              <iconify-icon icon="lucide:play" width="28" style={{color:'#7b61ff',marginLeft:2}}/>
             </div>
-            {open && (
-              <div className="md:hidden glass border-t border-white/5 px-5 py-4 flex flex-col gap-4">
-                {links.map(([id, label]) => (
-                  <button
-                    key={id}
-                    onClick={() => {
-                      scrollTo(id);
-                      setOpen(false);
-                    }}
-                    className={`text-sm font-medium text-left ${
-                      active === id ? "text-zen-violet" : "text-zen-muted"
-                    }`}
-                  >
-                    {label}
-                  </button>
-                ))}
-                <button
-                  onClick={() => {
-                    scrollTo("tarifs");
-                    setOpen(false);
-                  }}
-                  className="btn-cyan font-semibold text-sm px-5 py-2 rounded-lg w-full"
-                >
-                  Commencer gratuitement
-                </button>
-              </div>
-            )}
-          </nav>
-        );
-      }
+            <p className="text-zen-muted text-sm">Démo vidéo — Bientôt disponible</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-      /* ───── VIDEO MODAL ───── */
-      function VideoModal({ onClose }) {
-        useEffect(() => {
-          const h = (e) => {
-            if (e.key === "Escape") onClose();
-          };
-          window.addEventListener("keydown", h);
-          return () => window.removeEventListener("keydown", h);
-        }, [onClose]);
-        return (
-          <div
-            className="fixed inset-0 flex items-center justify-center p-4"
-            style={{ zIndex: 100 }}
-            onClick={onClose}
-          >
-            <div className="absolute inset-0 bg-black/80" />
-            <div
-              className="relative w-full max-w-3xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={onClose}
-                className="absolute -top-10 right-0 text-zen-muted hover:text-white transition-colors"
-              >
-                <iconify-icon icon="lucide:x" width="24" />
-              </button>
-              <div
-                className="rounded-2xl overflow-hidden border border-white/10"
-                style={{ aspectRatio: "16/9", background: "#0d0d1f" }}
-              >
-                <div className="w-full h-full flex flex-col items-center justify-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-zen-violet/20 flex items-center justify-center">
-                    <iconify-icon
-                      icon="lucide:play"
-                      width="28"
-                      style={{ color: "#7b61ff", marginLeft: 2 }}
-                    />
-                  </div>
-                  <p className="text-zen-muted text-sm">
-                    Démo vidéo — Bientôt disponible
-                  </p>
-                </div>
+/* ───── BANNER CTA ───── */
+function Banner({title,subtitle,btn1,btn2,onBtn1,onBtn2,btn2Mail}){
+  return(
+    <section className="py-20 px-5">
+      <div className="max-w-3xl mx-auto text-center">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4">{title}</h2>
+        <p className="text-zen-muted mb-8 max-w-xl mx-auto">{subtitle}</p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button onClick={onBtn1} className="btn-cyan font-semibold px-8 py-3 rounded-xl">{btn1}</button>
+          {btn2Mail?(
+            <a href={btn2Mail} className="border border-white/15 text-white font-medium px-8 py-3 rounded-xl hover:border-zen-cyan/50 transition-colors">{btn2}</a>
+          ):btn2?(
+            <button onClick={onBtn2} className="border border-white/15 text-white font-medium px-8 py-3 rounded-xl hover:border-zen-cyan/50 transition-colors">{btn2}</button>
+          ):null}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───── HOME ───── */
+function HomeSection({onDemo}){
+  const cards=[
+    {icon:'lucide:mouse-pointer-click',title:'Aucune compétence requise',desc:"Pas besoin de coder, monter des vidéos ou connaître l'IA. On s'occupe de tout."},
+    {icon:'lucide:timer',title:'Résultats en 10 minutes',desc:"Ton influenceur IA est créé, configuré et prêt à publier en moins de 10 minutes."},
+    {icon:'lucide:share-2',title:'3 réseaux connectés',desc:"TikTok, Instagram et YouTube connectés en un seul endroit, publication automatique."},
+    {icon:'lucide:credit-card',title:'Essai gratuit sans CB',desc:"Tu testes la plateforme gratuitement, sans carte bancaire, sans engagement."}
+  ];
+  const steps=[
+    {n:'01',title:'Décris ton influenceur',desc:"Donne-lui un nom, une niche, un style visuel et une personnalité"},
+    {n:'02',title:"L'IA génère tout",desc:"Avatar, voix, script et vidéo créés automatiquement en quelques minutes"},
+    {n:'03',title:'Publication auto',desc:"Tes vidéos sont publiées sur tes réseaux selon ton planning défini"}
+  ];
+  return(
+    <section id="accueil" className="relative pt-28 pb-10" style={{zIndex:1}}>
+      {/* Hero with Halo */}
+      <div className="relative overflow-hidden">
+        {/* Violet halo */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{zIndex:0}}>
+          <div style={{width:'min(800px,90vw)',height:'min(550px,70vw)',borderRadius:'50%',background:'radial-gradient(ellipse at center, rgba(123,97,255,0.16) 0%, rgba(123,97,255,0.09) 35%, rgba(123,97,255,0.03) 55%, transparent 75%)',filter:'blur(80px)'}}></div>
+        </div>
+        {/* Cyan core */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{zIndex:0}}>
+          <div style={{width:'min(350px,50vw)',height:'min(280px,40vw)',borderRadius:'50%',background:'radial-gradient(ellipse at center, rgba(0,212,255,0.1) 0%, rgba(0,212,255,0.04) 40%, transparent 70%)',filter:'blur(50px)'}}></div>
+        </div>
+        {/* Hero content */}
+        <div className="relative max-w-4xl mx-auto text-center px-5 pt-10 pb-20" style={{zIndex:1}}>
+          <h1 className="anim-up font-bold leading-tight mb-6" style={{fontSize:'clamp(2rem,5vw,3.5rem)'}}>
+            Crée ton Influenceur IA<br/>en quelques clics
+          </h1>
+          <p className="anim-up d2 text-zen-muted text-lg mb-10 max-w-xl mx-auto">
+            Génère des vidéos automatiquement et publie sur TikTok, Instagram et YouTube — sans effort.
+          </p>
+          <div className="anim-up d3 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button onClick={()=>scrollTo('tarifs')} className="btn-cyan font-semibold px-8 py-3.5 rounded-xl text-base">
+              Commencer gratuitement
+            </button>
+            <button onClick={onDemo} className="border border-white/15 text-white font-medium px-8 py-3.5 rounded-xl text-base hover:border-zen-cyan/40 transition-colors">
+              Démo vidéo
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Trust Cards */}
+      <div className="max-w-6xl mx-auto px-5 py-16">
+        <h2 className="text-center text-xl md:text-2xl font-bold mb-12">Tout ce dont tu as besoin, dès le premier jour</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {cards.map((c,i)=>(
+            <div key={i} className="card-glow rounded-2xl p-6 border" style={{background:'rgba(16,16,28,0.85)',borderColor:'rgba(123,97,255,.2)'}}>
+              <div className="w-10 h-10 rounded-xl bg-zen-violet/15 flex items-center justify-center mb-4">
+                <iconify-icon icon={c.icon} width="20" style={{color:'#7b61ff'}}/>
               </div>
+              <h3 className="font-semibold text-base mb-2">{c.title}</h3>
+              <p className="text-zen-muted text-sm leading-relaxed">{c.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Steps */}
+      <div className="max-w-5xl mx-auto px-5 py-16">
+        <h2 className="text-center text-xl md:text-2xl font-bold mb-14">Comment créer ton influenceur IA en 3 étapes</h2>
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0">
+          {steps.map((s,i)=>(
+            <React.Fragment key={i}>
+              <div className="flex flex-col items-center text-center max-w-[240px]">
+                <div className="w-12 h-12 rounded-full border border-zen-cyan/30 flex items-center justify-center mb-4 text-zen-cyan font-bold text-sm">{s.n}</div>
+                <h3 className="font-semibold text-base mb-2">{s.title}</h3>
+                <p className="text-zen-muted text-sm leading-relaxed">{s.desc}</p>
+              </div>
+              {i<2&&(
+                <div className="hidden md:flex items-center px-4 text-zen-violet/40">
+                  <iconify-icon icon="lucide:arrow-right" width="24"/>
+                </div>
+              )}
+              {i<2&&(
+                <div className="md:hidden py-1 text-zen-violet/40">
+                  <iconify-icon icon="lucide:arrow-down" width="24"/>
+                </div>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+        <div className="text-center mt-10">
+          <button onClick={()=>scrollTo('tarifs')} className="btn-cyan font-semibold px-8 py-3 rounded-xl">Essayer maintenant</button>
+        </div>
+      </div>
+
+      <Banner
+        title="Prêt à lancer ton influenceur IA ?"
+        subtitle="Rejoins les premiers créateurs qui automatisent leur présence sur les réseaux grâce à l'IA."
+        btn1="Commencer gratuitement" btn2="Voir les créations"
+        onBtn1={()=>scrollTo('tarifs')} onBtn2={()=>scrollTo('creations')}
+      />
+    </section>
+  );
+}
+
+/* ───── ABOUT ───── */
+function AboutSection(){
+  const values=[
+    {icon:'lucide:accessibility',title:'Accessibilité',desc:"Créer un influenceur IA doit être aussi simple que créer un compte sur un réseau social."},
+    {icon:'lucide:bot',title:'Automatisation',desc:"Le temps est précieux. L'IA travaille pour toi pendant que tu te concentres sur l'essentiel."},
+    {icon:'lucide:sparkles',title:'Innovation',desc:"Nous repoussons les limites de ce que l'IA peut faire pour les créateurs de contenu."}
+  ];
+  const timeline=[
+    {n:'01',title:'Lancement de la plateforme — 2026',desc:'Création de la première version de Zeno.'},
+    {n:'02',title:'Nouvelles fonctionnalités IA — 2026',desc:"Ajout de nouvelles voix, styles visuels et niches de contenu."},
+    {n:'03',title:"Ouverture de l'équipe — 2027",desc:"Les premiers membres rejoignent l'aventure."},
+    {n:'04',title:'Expansion internationale — 2027',desc:'Zeno disponible en plusieurs langues.'}
+  ];
+  return(
+    <section id="about" className="relative py-20" style={{zIndex:1}}>
+      <div className="max-w-6xl mx-auto px-5">
+        {/* Mission */}
+        <div className="text-center max-w-3xl mx-auto mb-20">
+          <h2 className="text-2xl md:text-3xl font-bold mb-5">Notre mission : démocratiser la création d'influenceurs IA</h2>
+          <p className="text-zen-muted text-lg leading-relaxed">Nous croyons que chaque personne mérite sa propre présence IA sur les réseaux sociaux — peu importe son niveau technique ou son budget.</p>
+        </div>
+
+        {/* Founder */}
+        <div className="flex flex-col md:flex-row items-center gap-10 md:gap-14 mb-20 max-w-4xl mx-auto">
+          <div className="shrink-0">
+            <div className="w-36 h-36 rounded-full overflow-hidden border-2 border-zen-violet/30">
+              <img src="https://picsum.photos/seed/zenofounder/300/300" alt="Fondateur" className="w-full h-full object-cover"/>
             </div>
           </div>
-        );
-      }
+          <div>
+            <h3 className="text-xl font-bold mb-3">Un créateur, une vision, une plateforme.</h3>
+            <p className="text-zen-muted leading-relaxed">Je suis Alex, fondateur de Zeno. J'ai créé cette plateforme avec une conviction simple : l'IA va transformer la création de contenu, et tout le monde doit pouvoir en profiter. Seul derrière ce projet aujourd'hui, je construis quelque chose de plus grand pour demain.</p>
+          </div>
+        </div>
 
-      /* ───── BANNER CTA ───── */
-      function Banner({
-        title,
-        subtitle,
-        btn1,
-        btn2,
-        onBtn1,
-        onBtn2,
-        btn2Mail,
-      }) {
-        return (
-          <section className="py-20 px-5">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">{title}</h2>
-              <p className="text-zen-muted mb-8 max-w-xl mx-auto">{subtitle}</p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button
-                  onClick={onBtn1}
-                  className="btn-cyan font-semibold px-8 py-3 rounded-xl"
-                >
-                  {btn1}
-                </button>
-                {btn2Mail ? (
-                  <a
-                    href={btn2Mail}
-                    className="border border-white/15 text-white font-medium px-8 py-3 rounded-xl hover:border-zen-cyan/50 transition-colors"
-                  >
-                    {btn2}
-                  </a>
-                ) : btn2 ? (
-                  <button
-                    onClick={onBtn2}
-                    className="border border-white/15 text-white font-medium px-8 py-3 rounded-xl hover:border-zen-cyan/50 transition-colors"
-                  >
-                    {btn2}
-                  </button>
-                ) : null}
+        {/* Values */}
+        <div className="mb-20">
+          <h2 className="text-center text-xl md:text-2xl font-bold mb-12">Ce qui nous guide chaque jour</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {values.map((v,i)=>(
+              <div key={i} className="card-glow rounded-2xl p-6 border" style={{background:'rgba(16,16,28,0.85)',borderColor:'rgba(123,97,255,.2)'}}>
+                <div className="w-10 h-10 rounded-xl bg-zen-violet/15 flex items-center justify-center mb-4">
+                  <iconify-icon icon={v.icon} width="20" style={{color:'#7b61ff'}}/>
+                </div>
+                <h3 className="font-semibold text-base mb-2">{v.title}</h3>
+                <p className="text-zen-muted text-sm leading-relaxed">{v.desc}</p>
               </div>
-            </div>
-          </section>
-        );
-      }
+            ))}
+          </div>
+        </div>
 
-      /* ───── HOME ───── */
-      function HomeSection({ onDemo }) {
-        const cards = [
-          {
-            icon: "lucide:mouse-pointer-click",
-            title: "Aucune compétence requise",
-            desc: "Pas besoin de coder, monter des vidéos ou connaître l'IA. On s'occupe de tout.",
-          },
-          {
-            icon: "lucide:timer",
-            title: "Résultats en 10 minutes",
-            desc: "Ton influenceur IA est créé, configuré et prêt à publier en moins de 10 minutes.",
-          },
-          {
-            icon: "lucide:share-2",
-            title: "3 réseaux connectés",
-            desc: "TikTok, Instagram et YouTube connectés en un seul endroit, publication automatique.",
-          },
-          {
-            icon: "lucide:credit-card",
-            title: "Essai gratuit sans CB",
-            desc: "Tu testes la plateforme gratuitement, sans carte bancaire, sans engagement.",
-          },
-        ];
-        const steps = [
-          {
-            n: "01",
-            title: "Décris ton influenceur",
-            desc: "Donne-lui un nom, une niche, un style visuel et une personnalité",
-          },
-          {
-            n: "02",
-            title: "L'IA génère tout",
-            desc: "Avatar, voix, script et vidéo créés automatiquement en quelques minutes",
-          },
-          {
-            n: "03",
-            title: "Publication auto",
-            desc: "Tes vidéos sont publiées sur tes réseaux selon ton planning défini",
-          },
-        ];
-        return (
-          <section
-            id="accueil"
-            className="relative pt-28 pb-10"
-            style={{ zIndex: 1 }}
-          >
-            {/* Hero with Halo */}
-            <div className="relative overflow-hidden">
-              {/* Violet halo */}
-              <div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                style={{ zIndex: 0 }}
-              >
-                <div
-                  style={{
-                    width: "min(800px,90vw)",
-                    height: "min(550px,70vw)",
-                    borderRadius: "50%",
-                    background:
-                      "radial-gradient(ellipse at center, rgba(123,97,255,0.16) 0%, rgba(123,97,255,0.09) 35%, rgba(123,97,255,0.03) 55%, transparent 75%)",
-                    filter: "blur(80px)",
-                  }}
-                ></div>
+        {/* Timeline */}
+        <div className="mb-10 max-w-3xl mx-auto">
+          <h2 className="text-center text-xl md:text-2xl font-bold mb-12">L'aventure ne fait que commencer</h2>
+          <div className="relative pl-8 border-l border-zen-violet/25">
+            {timeline.map((t,i)=>(
+              <div key={i} className="mb-8 last:mb-0 relative">
+                <div className="absolute -left-[41px] w-5 h-5 rounded-full bg-zen-bg border-2 border-zen-violet/60 flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 rounded-full bg-zen-violet"/>
+                </div>
+                <span className="text-zen-cyan text-xs font-bold">{t.n}</span>
+                <h3 className="font-semibold text-base mt-1 mb-1">{t.title}</h3>
+                <p className="text-zen-muted text-sm">{t.desc}</p>
               </div>
-              {/* Cyan core */}
-              <div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                style={{ zIndex: 0 }}
-              >
-                <div
-                  style={{
-                    width: "min(350px,50vw)",
-                    height: "min(280px,40vw)",
-                    borderRadius: "50%",
-                    background:
-                      "radial-gradient(ellipse at center, rgba(0,212,255,0.1) 0%, rgba(0,212,255,0.04) 40%, transparent 70%)",
-                    filter: "blur(50px)",
-                  }}
-                ></div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <Banner
+        title="Tu veux faire partie de l'aventure ?"
+        subtitle="Que tu sois créateur, investisseur ou simplement curieux — on veut t'entendre."
+        btn1="Commencer gratuitement" btn2="Nous contacter"
+        onBtn1={()=>scrollTo('tarifs')}
+        btn2Mail="mailto:contact@zeno.ai?subject=Prise%20de%20contact%20%E2%80%94%20Zeno"
+      />
+    </section>
+  );
+}
+
+/* ───── CREATIONS ───── */
+function CreationsSection(){
+  const items=[
+    {name:'Luna',niche:'Mode & Lifestyle',handle:'@luna.style',followers:'45K',videos:'200',platform:'TikTok',seed:'luna-style'},
+    {name:'Max',niche:'Fitness & Nutrition',handle:'@max.fit',followers:'32K',videos:'150',platform:'YouTube',seed:'max-fit'},
+    {name:'Aria',niche:'Tech & Innovation',handle:'@aria.tech',followers:'28K',videos:'120',platform:'Instagram',seed:'aria-tech'},
+    {name:'Nova',niche:'Cuisine & Gastronomie',handle:'@nova.cook',followers:'55K',videos:'300',platform:'TikTok',seed:'nova-cook'},
+    {name:'Zephyr',niche:'Gaming & Esport',handle:'@zeph.plays',followers:'40K',videos:'250',platform:'YouTube',seed:'zephyr-play'},
+    {name:'Iris',niche:'Voyage & Aventure',handle:'@iris.travel',followers:'38K',videos:'180',platform:'Instagram',seed:'iris-travel'}
+  ];
+  const platformIcon=p=>p==='TikTok'?'ic:baseline-tiktok':p==='YouTube'?'mdi:youtube':'mdi:instagram';
+  const platformColor=p=>p==='TikTok'?'#ff0050':p==='YouTube'?'#ff0000':'#e1306c';
+  return(
+    <section id="creations" className="relative py-20" style={{zIndex:1}}>
+      <div className="max-w-6xl mx-auto px-5">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <h2 className="text-2xl md:text-3xl font-bold mb-5">Des influenceurs IA déjà en action</h2>
+          <p className="text-zen-muted text-lg">Découvre ce que la communauté Zeno a créé — et imagine ce que tu pourrais faire.</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {items.map((c,i)=>(
+            <div key={i} className="card-glow rounded-2xl overflow-hidden border" style={{background:'rgba(16,16,28,0.85)',borderColor:'rgba(123,97,255,.15)'}}>
+              <div className="relative h-48">
+                <img src={`https://picsum.photos/seed/${c.seed}/600/400`} alt={c.name} className="w-full h-full object-cover"/>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#10101c] via-transparent to-transparent"/>
+                <div className="absolute bottom-3 left-4 flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-full border-2 border-zen-violet/50 overflow-hidden">
+                    <img src={`https://picsum.photos/seed/${c.seed}avatar/100/100`} alt="" className="w-full h-full object-cover"/>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">{c.name}</p>
+                    <p className="text-zen-muted text-xs">{c.handle}</p>
+                  </div>
+                </div>
+                <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium" style={{background:'rgba(0,0,0,.6)',backdropFilter:'blur(6px)'}}>
+                  <iconify-icon icon={platformIcon(c.platform)} width="14" style={{color:platformColor(c.platform)}}/>
+                  {c.platform}
+                </div>
               </div>
-              {/* Hero content */}
-              <div
-                className="relative max-w-4xl mx-auto text-center px-5 pt-10 pb-20"
-                style={{ zIndex: 1 }}
-              >
-                <h1
-                  className="anim-up font-bold leading-tight mb-6"
-                  style={{ fontSize: "clamp(2rem,5vw,3.5rem)" }}
-                >
-                  Crée ton Influenceur IA
-                  <br />
-                  en quelques clics
-                </h1>
-                <p className="anim-up d2 text-zen-muted text-lg mb-10 max-w-xl mx-auto">
-                  Génère des vidéos automatiquement et publie sur TikTok,
-                  Instagram et YouTube — sans effort.
-                </p>
-                <div className="anim-up d3 flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <button
-                    onClick={() => scrollTo("tarifs")}
-                    className="btn-cyan font-semibold px-8 py-3.5 rounded-xl text-base"
-                  >
-                    Commencer gratuitement
-                  </button>
-                  <button
-                    onClick={onDemo}
-                    className="border border-white/15 text-white font-medium px-8 py-3.5 rounded-xl text-base hover:border-zen-cyan/40 transition-colors"
-                  >
-                    Démo vidéo
-                  </button>
+              <div className="p-5">
+                <span className="inline-block text-xs font-medium px-2.5 py-1 rounded-full bg-zen-violet/15 text-zen-cyan mb-3">{c.niche}</span>
+                <div className="flex items-center gap-5 text-sm">
+                  <div><span className="font-semibold text-white">{c.followers}</span> <span className="text-zen-muted">abonnés</span></div>
+                  <div><span className="font-semibold text-white">{c.videos}</span> <span className="text-zen-muted">vidéos</span></div>
                 </div>
               </div>
             </div>
+          ))}
+        </div>
+        <div className="text-center mt-14">
+          <button onClick={()=>scrollTo('tarifs')} className="btn-cyan font-semibold px-8 py-3 rounded-xl">Créer ton influenceur IA</button>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-            {/* Trust Cards */}
-            <div className="max-w-6xl mx-auto px-5 py-16">
-              <h2 className="text-center text-xl md:text-2xl font-bold mb-12">
-                Tout ce dont tu as besoin, dès le premier jour
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                {cards.map((c, i) => (
-                  <div
-                    key={i}
-                    className="card-glow rounded-2xl p-6 border"
-                    style={{
-                      background: "rgba(16,16,28,0.85)",
-                      borderColor: "rgba(123,97,255,.2)",
-                    }}
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-zen-violet/15 flex items-center justify-center mb-4">
-                      <iconify-icon
-                        icon={c.icon}
-                        width="20"
-                        style={{ color: "#7b61ff" }}
-                      />
-                    </div>
-                    <h3 className="font-semibold text-base mb-2">{c.title}</h3>
-                    <p className="text-zen-muted text-sm leading-relaxed">
-                      {c.desc}
-                    </p>
+/* ───── PRICING ───── */
+function PricingSection(){
+  const[annual,setAnnual]=useState(false);
+  const[faq,setFaq]=useState(null);
+
+  const plans=[
+    {
+      name:'Starter',tagline:'Pour découvrir sans engagement',
+      price:'Gratuit — pour toujours',priceAnnual:null,savings:null,
+      btn:'Commencer gratuitement',btnBg:'#1D9E75',
+      features:['1 influenceur IA personnalisable','5 vidéos générées / mois','1 réseau social connecté','Qualité vidéo 720p','Publication manuelle']
+    },
+    {
+      name:'Nova',tagline:'Pour les créateurs sérieux',popular:true,
+      price:'29€ / mois',priceAnnual:'250€ / an',savings:'✦ Économise 98€ — 3 mois offerts',
+      btn:'Choisir Nova',btnBg:'#7b61ff',
+      features:['3 influenceurs IA','Personnalisation poussée avec l\'IA','30 vidéos générées / mois','3 réseaux sociaux connectés','Qualité vidéo 1080p / 4K','Publication automatique','Analytics essentiels']
+    },
+    {
+      name:'Stellar',tagline:'Pour les agences et grandes marques',
+      price:'100€ / mois',priceAnnual:'990€ / an',savings:'✦ Économise 210€ — 2 mois offerts',
+      btn:'Choisir Stellar',btnBg:'#C9A84C',
+      features:['50 influenceurs IA','250 vidéos générées / mois','Tous les réseaux connectés','Avatar IA ultra-personnalisé','Publication automatique avancée','Analytics avancés + export PDF/Excel','Accès API','Support prioritaire']
+    }
+  ];
+
+  const tableRows=[
+    {cat:'Influenceurs IA',rows:[
+      ['Nombre d\'influenceurs IA','1','3','50'],
+      ['Personnalisation de base','✓','✓','✓'],
+      ['Personnalisation poussée IA','✗','✓','✓'],
+      ['Avatar ultra-personnalisé','✗','✗','✓']
+    ]},
+    {cat:'Vidéos',rows:[
+      ['Vidéos générées / mois','5','30','250'],
+      ['Qualité 720p','✓','✓','✓'],
+      ['Qualité 1080p','✗','✓','✓'],
+      ['Qualité 4K','✗','✓','✓']
+    ]},
+    {cat:'Publication',rows:[
+      ['Réseaux sociaux connectés','1','3','Tous'],
+      ['Publication manuelle','✓','✓','✓'],
+      ['Publication automatique','✗','✓','✓'],
+      ['Publication automatique avancée','✗','✗','✓']
+    ]},
+    {cat:'Analytics',rows:[
+      ['Dashboard basique','✓','✓','✓'],
+      ['Analytics essentiels','✗','✓','✓'],
+      ['Analytics avancés','✗','✗','✓'],
+      ['Export PDF / Excel','✗','✗','✓']
+    ]},
+    {cat:'Support',rows:[
+      ['Support par email','✓','✓','✓'],
+      ['Support prioritaire','✗','✗','✓'],
+      ['Accès API','✗','✗','✓'],
+      ['Facture entreprise','✗','✗','✓']
+    ]}
+  ];
+
+  const faqs=[
+    {q:"Est-ce que le plan Starter est vraiment gratuit pour toujours ?",r:"Oui, sans limite de durée et sans carte bancaire. Tu peux utiliser le plan Starter indéfiniment."},
+    {q:"Est-ce que je peux changer de plan à tout moment ?",r:"Oui, depuis ton tableau de bord. Aucun engagement."},
+    {q:"Quels moyens de paiement acceptez-vous ?",r:"Carte bancaire (Visa, Mastercard), PayPal et virement pour Stellar."},
+    {q:"Que se passe-t-il si j'annule ?",r:"Tu repasses sur Starter. Tes données sont conservées."},
+    {q:"Le plan Stellar convient-il aux entreprises ?",r:"Oui, facture disponible pour chaque paiement."}
+  ];
+
+  const Check=({v})=><span className={v==='✓'?'text-zen-green':v==='✗'?'text-red-400/60':'text-white font-medium'}>{v}</span>;
+
+  return(
+    <section id="tarifs" className="relative py-20" style={{zIndex:1}}>
+      <div className="max-w-6xl mx-auto px-5">
+        {/* Header */}
+        <div className="text-center max-w-3xl mx-auto mb-10">
+          <h2 className="text-2xl md:text-3xl font-bold mb-5">Un plan pour chaque créateur</h2>
+          <p className="text-zen-muted text-lg">Commence gratuitement, évolue quand tu es prêt. Aucune carte bancaire requise pour démarrer.</p>
+        </div>
+
+        {/* Toggle */}
+        <div className="flex items-center justify-center gap-4 mb-14">
+          <span className={`text-sm font-medium ${!annual?'text-white':'text-zen-muted'}`}>Mensuel</span>
+          <div className={`toggle-track ${annual?'on':''}`} onClick={()=>setAnnual(!annual)}>
+            <div className="toggle-dot"/>
+          </div>
+          <span className={`text-sm font-medium ${annual?'text-white':'text-zen-muted'}`}>Annuel</span>
+          {annual&&<span className="text-xs font-semibold text-zen-green bg-zen-green/10 px-3 py-1 rounded-full ml-1">Économise jusqu'à 210€</span>}
+        </div>
+
+        {/* Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+          {plans.map((p,i)=>{
+            const isPopular=!!p.popular;
+            return(
+              <div key={i} className={`rounded-2xl p-7 border relative flex flex-col ${isPopular?'md:-mt-4 md:mb-0':''}`}
+                style={{
+                  background:isPopular?'#14143a':'rgba(16,16,28,0.85)',
+                  borderColor:isPopular?'#7b61ff':'rgba(123,97,255,.15)',
+                  borderWidth:isPopular?'1.5px':'1px',
+                  boxShadow:isPopular?'0 0 40px rgba(123,97,255,.12)':'none'
+                }}>
+                {isPopular&&(
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-xs font-bold px-4 py-1 rounded-full bg-zen-violet text-white">
+                    ⭐ Le plus populaire
                   </div>
-                ))}
+                )}
+                <h3 className="text-xl font-bold mb-1">{p.name}</h3>
+                <p className="text-zen-muted text-sm mb-5">{p.tagline}</p>
+                <p className="text-2xl font-bold mb-1">{annual&&p.priceAnnual?p.priceAnnual:p.price}</p>
+                {annual&&p.savings&&<p className="text-sm text-zen-cyan mb-5">{p.savings}</p>}
+                {!annual&&<div className="mb-5"/>}
+                <ul className="space-y-3 mb-8 flex-1">
+                  {p.features.map((f,j)=>(
+                    <li key={j} className="flex items-start gap-2.5 text-sm">
+                      <iconify-icon icon="lucide:check" width="16" style={{color:p.btnBg,marginTop:2,flexShrink:0}}/>
+                      <span className="text-zen-muted">{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <button className="w-full py-3 rounded-xl text-white font-semibold text-sm transition-all hover:brightness-110" style={{background:p.btnBg}}>
+                  {p.btn}
+                </button>
               </div>
-            </div>
+            );
+          })}
+        </div>
 
-            {/* Steps */}
-            <div className="max-w-5xl mx-auto px-5 py-16">
-              <h2 className="text-center text-xl md:text-2xl font-bold mb-14">
-                Comment créer ton influenceur IA en 3 étapes
-              </h2>
-              <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0">
-                {steps.map((s, i) => (
-                  <React.Fragment key={i}>
-                    <div className="flex flex-col items-center text-center max-w-[240px]">
-                      <div className="w-12 h-12 rounded-full border border-zen-cyan/30 flex items-center justify-center mb-4 text-zen-cyan font-bold text-sm">
-                        {s.n}
-                      </div>
-                      <h3 className="font-semibold text-base mb-2">
-                        {s.title}
-                      </h3>
-                      <p className="text-zen-muted text-sm leading-relaxed">
-                        {s.desc}
-                      </p>
-                    </div>
-                    {i < 2 && (
-                      <div className="hidden md:flex items-center px-4 text-zen-violet/40">
-                        <iconify-icon icon="lucide:arrow-right" width="24" />
-                      </div>
-                    )}
-                    {i < 2 && (
-                      <div className="md:hidden py-1 text-zen-violet/40">
-                        <iconify-icon icon="lucide:arrow-down" width="24" />
-                      </div>
-                    )}
+        {/* Comparison Table */}
+        <div className="mb-20">
+          <h2 className="text-center text-xl md:text-2xl font-bold mb-10">Comparer les plans en détail</h2>
+          <div className="overflow-x-auto rounded-2xl border border-white/5" style={{background:'rgba(16,16,28,0.6)'}}>
+            <table className="w-full min-w-[600px] text-sm">
+              <thead>
+                <tr className="border-b border-white/5">
+                  <th className="text-left py-4 px-5 text-zen-muted font-medium">Fonctionnalité</th>
+                  <th className="text-center py-4 px-4 font-semibold">Starter</th>
+                  <th className="text-center py-4 px-4 font-semibold text-zen-violet">Nova</th>
+                  <th className="text-center py-4 px-4 font-semibold text-zen-gold">Stellar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableRows.map((cat,ci)=>(
+                  <React.Fragment key={ci}>
+                    <tr><td colSpan={4} className="py-3 px-5 text-xs font-bold text-zen-violet uppercase tracking-wider bg-zen-violet/5">{cat.cat}</td></tr>
+                    {cat.rows.map((r,ri)=>(
+                      <tr key={ri} className="border-b border-white/5 hover:bg-white/[.02] transition-colors">
+                        <td className="py-3 px-5 text-zen-muted">{r[0]}</td>
+                        <td className="py-3 px-4 text-center"><Check v={r[1]}/></td>
+                        <td className="py-3 px-4 text-center"><Check v={r[2]}/></td>
+                        <td className="py-3 px-4 text-center"><Check v={r[3]}/></td>
+                      </tr>
+                    ))}
                   </React.Fragment>
                 ))}
-              </div>
-              <div className="text-center mt-10">
-                <button
-                  onClick={() => scrollTo("tarifs")}
-                  className="btn-cyan font-semibold px-8 py-3 rounded-xl"
-                >
-                  Essayer maintenant
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* FAQ */}
+        <div className="max-w-3xl mx-auto mb-10">
+          <h2 className="text-center text-xl md:text-2xl font-bold mb-10">Tu as des questions ? On a les réponses.</h2>
+          <div className="space-y-3">
+            {faqs.map((f,i)=>(
+              <div key={i} className="rounded-xl border border-white/5 overflow-hidden" style={{background:'rgba(16,16,28,0.6)'}}>
+                <button className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-white/[.02] transition-colors" onClick={()=>setFaq(faq===i?null:i)}>
+                  <span className="font-medium text-sm pr-4">{f.q}</span>
+                  <iconify-icon icon="lucide:chevron-down" width="18" style={{color:'#a0a0b0',transition:'transform .3s',transform:faq===i?'rotate(180deg)':'rotate(0)'}}/>
                 </button>
+                <div className={`overflow-hidden transition-all duration-300 ${faq===i?'max-h-40 opacity-100':'max-h-0 opacity-0'}`}>
+                  <p className="px-6 pb-4 text-zen-muted text-sm leading-relaxed">{f.r}</p>
+                </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <Banner
+        title="Lance-toi aujourd'hui — c'est gratuit."
+        subtitle="Crée ton premier influenceur IA en moins de 10 minutes. Aucune carte bancaire requise."
+        btn1="Commencer gratuitement" btn2={null}
+        onBtn1={()=>scrollTo('tarifs')}
+      />
+    </section>
+  );
+}
+
+/* ───── FOOTER ───── */
+function Footer(){
+  return(
+    <footer className="relative border-t border-white/5" style={{zIndex:1,background:'#060610'}}>
+      <div className="max-w-6xl mx-auto px-5 py-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+          {/* Col 1 */}
+          <div>
+            <img src="/logo.png" alt="Zeno" className="h-7 object-contain mb-4" onError={e=>{e.target.style.display='none';const s=document.createElement('span');s.textContent='ZENO';s.style.cssText="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#7b61ff;letter-spacing:2px";e.target.parentNode.insertBefore(s,e.target)}}/>
+            <p className="text-zen-muted text-sm mb-2">La plateforme des influenceurs IA</p>
+            <p className="text-zen-muted/60 text-xs">© 2026 Zeno</p>
+          </div>
+          {/* Col 2 */}
+          <div>
+            <h4 className="font-semibold text-sm mb-4">Navigation</h4>
+            <div className="flex flex-col gap-2.5">
+              {[['accueil','Accueil'],['about','À propos'],['creations','Créations'],['tarifs','Tarifs']].map(([id,label])=>(
+                <button key={id} onClick={()=>scrollTo(id)} className="text-zen-muted text-sm hover:text-zen-cyan transition-colors text-left">{label}</button>
+              ))}
             </div>
-
-            <Banner
-              title="Prêt à lancer ton influenceur IA ?"
-              subtitle="Rejoins les premiers créateurs qui automatisent leur présence sur les réseaux grâce à l'IA."
-              btn1="Commencer gratuitement"
-              btn2="Voir les créations"
-              onBtn1={() => scrollTo("tarifs")}
-              onBtn2={() => scrollTo("creations")}
-            />
-          </section>
-        );
-      }
-
-      /* ───── ABOUT ───── */
-      function AboutSection() {
-        const values = [
-          {
-            icon: "lucide:accessibility",
-            title: "Accessibilité",
-            desc: "Créer un influenceur IA doit être aussi simple que créer un compte sur un réseau social.",
-          },
-          {
-            icon: "lucide:bot",
-            title: "Automatisation",
-            desc: "Le temps est précieux. L'IA travaille pour toi pendant que tu te concentres sur l'essentiel.",
-          },
-          {
-            icon: "lucide:sparkles",
-            title: "Innovation",
-            desc: "Nous repoussons les limites de ce que l'IA peut faire pour les créateurs de contenu.",
-          },
-        ];
-        const timeline = [
-          {
-            n: "01",
-            title: "Lancement de la plateforme — 2026",
-            desc: "Création de la première version de Zeno.",
-          },
-          {
-            n: "02",
-            title: "Nouvelles fonctionnalités IA — 2026",
-            desc: "Ajout de nouvelles voix, styles visuels et niches de contenu.",
-          },
-          {
-            n: "03",
-            title: "Ouverture de l'équipe — 2027",
-            desc: "Les premiers membres rejoignent l'aventure.",
-          },
-          {
-            n: "04",
-            title: "Expansion internationale — 2027",
-            desc: "Zeno disponible en plusieurs langues.",
-          },
-        ];
-        return (
-          <section id="about" className="relative py-20" style={{ zIndex: 1 }}>
-            <div className="max-w-6xl mx-auto px-5">
-              {/* Mission */}
-              <div className="text-center max-w-3xl mx-auto mb-20">
-                <h2 className="text-2xl md:text-3xl font-bold mb-5">
-                  Notre mission : démocratiser la création d'influenceurs IA
-                </h2>
-                <p className="text-zen-muted text-lg leading-relaxed">
-                  Nous croyons que chaque personne mérite sa propre présence IA
-                  sur les réseaux sociaux — peu importe son niveau technique ou
-                  son budget.
-                </p>
-              </div>
-
-              {/* Founder */}
-              <div className="flex flex-col md:flex-row items-center gap-10 md:gap-14 mb-20 max-w-4xl mx-auto">
-                <div className="shrink-0">
-                  <div className="w-36 h-36 rounded-full overflow-hidden border-2 border-zen-violet/30">
-                    <img
-                      src="https://picsum.photos/seed/zenofounder/300/300"
-                      alt="Fondateur"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-3">
-                    Un créateur, une vision, une plateforme.
-                  </h3>
-                  <p className="text-zen-muted leading-relaxed">
-                    Je suis Alex, fondateur de Zeno. J'ai créé cette plateforme
-                    avec une conviction simple : l'IA va transformer la création
-                    de contenu, et tout le monde doit pouvoir en profiter. Seul
-                    derrière ce projet aujourd'hui, je construis quelque chose
-                    de plus grand pour demain.
-                  </p>
-                </div>
-              </div>
-
-              {/* Values */}
-              <div className="mb-20">
-                <h2 className="text-center text-xl md:text-2xl font-bold mb-12">
-                  Ce qui nous guide chaque jour
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  {values.map((v, i) => (
-                    <div
-                      key={i}
-                      className="card-glow rounded-2xl p-6 border"
-                      style={{
-                        background: "rgba(16,16,28,0.85)",
-                        borderColor: "rgba(123,97,255,.2)",
-                      }}
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-zen-violet/15 flex items-center justify-center mb-4">
-                        <iconify-icon
-                          icon={v.icon}
-                          width="20"
-                          style={{ color: "#7b61ff" }}
-                        />
-                      </div>
-                      <h3 className="font-semibold text-base mb-2">
-                        {v.title}
-                      </h3>
-                      <p className="text-zen-muted text-sm leading-relaxed">
-                        {v.desc}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Timeline */}
-              <div className="mb-10 max-w-3xl mx-auto">
-                <h2 className="text-center text-xl md:text-2xl font-bold mb-12">
-                  L'aventure ne fait que commencer
-                </h2>
-                <div className="relative pl-8 border-l border-zen-violet/25">
-                  {timeline.map((t, i) => (
-                    <div key={i} className="mb-8 last:mb-0 relative">
-                      <div className="absolute -left-[41px] w-5 h-5 rounded-full bg-zen-bg border-2 border-zen-violet/60 flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 rounded-full bg-zen-violet" />
-                      </div>
-                      <span className="text-zen-cyan text-xs font-bold">
-                        {t.n}
-                      </span>
-                      <h3 className="font-semibold text-base mt-1 mb-1">
-                        {t.title}
-                      </h3>
-                      <p className="text-zen-muted text-sm">{t.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          </div>
+          {/* Col 3 */}
+          <div>
+            <h4 className="font-semibold text-sm mb-4">Nous suivre</h4>
+            <div className="flex flex-col gap-2.5">
+              {[['https://tiktok.com','TikTok','ic:baseline-tiktok'],['https://instagram.com','Instagram','mdi:instagram'],['https://youtube.com','YouTube','mdi:youtube'],['https://linkedin.com','LinkedIn','mdi:linkedin']].map(([url,label,icon])=>(
+                <a key={label} href={url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-zen-muted text-sm hover:text-zen-cyan transition-colors">
+                  <iconify-icon icon={icon} width="16"/>{label}
+                </a>
+              ))}
             </div>
-
-            <Banner
-              title="Tu veux faire partie de l'aventure ?"
-              subtitle="Que tu sois créateur, investisseur ou simplement curieux — on veut t'entendre."
-              btn1="Commencer gratuitement"
-              btn2="Nous contacter"
-              onBtn1={() => scrollTo("tarifs")}
-              btn2Mail="mailto:contact@zeno.ai?subject=Prise%20de%20contact%20%E2%80%94%20Zeno"
-            />
-          </section>
-        );
-      }
-
-      /* ───── CREATIONS ───── */
-      function CreationsSection() {
-        const items = [
-          {
-            name: "Luna",
-            niche: "Mode & Lifestyle",
-            handle: "@luna.style",
-            followers: "45K",
-            videos: "200",
-            platform: "TikTok",
-            seed: "luna-style",
-          },
-          {
-            name: "Max",
-            niche: "Fitness & Nutrition",
-            handle: "@max.fit",
-            followers: "32K",
-            videos: "150",
-            platform: "YouTube",
-            seed: "max-fit",
-          },
-          {
-            name: "Aria",
-            niche: "Tech & Innovation",
-            handle: "@aria.tech",
-            followers: "28K",
-            videos: "120",
-            platform: "Instagram",
-            seed: "aria-tech",
-          },
-          {
-            name: "Nova",
-            niche: "Cuisine & Gastronomie",
-            handle: "@nova.cook",
-            followers: "55K",
-            videos: "300",
-            platform: "TikTok",
-            seed: "nova-cook",
-          },
-          {
-            name: "Zephyr",
-            niche: "Gaming & Esport",
-            handle: "@zeph.plays",
-            followers: "40K",
-            videos: "250",
-            platform: "YouTube",
-            seed: "zephyr-play",
-          },
-          {
-            name: "Iris",
-            niche: "Voyage & Aventure",
-            handle: "@iris.travel",
-            followers: "38K",
-            videos: "180",
-            platform: "Instagram",
-            seed: "iris-travel",
-          },
-        ];
-        const platformIcon = (p) =>
-          p === "TikTok"
-            ? "ic:baseline-tiktok"
-            : p === "YouTube"
-            ? "mdi:youtube"
-            : "mdi:instagram";
-        const platformColor = (p) =>
-          p === "TikTok" ? "#ff0050" : p === "YouTube" ? "#ff0000" : "#e1306c";
-        return (
-          <section
-            id="creations"
-            className="relative py-20"
-            style={{ zIndex: 1 }}
-          >
-            <div className="max-w-6xl mx-auto px-5">
-              <div className="text-center max-w-3xl mx-auto mb-14">
-                <h2 className="text-2xl md:text-3xl font-bold mb-5">
-                  Des influenceurs IA déjà en action
-                </h2>
-                <p className="text-zen-muted text-lg">
-                  Découvre ce que la communauté Zeno a créé — et imagine ce que
-                  tu pourrais faire.
-                </p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {items.map((c, i) => (
-                  <div
-                    key={i}
-                    className="card-glow rounded-2xl overflow-hidden border"
-                    style={{
-                      background: "rgba(16,16,28,0.85)",
-                      borderColor: "rgba(123,97,255,.15)",
-                    }}
-                  >
-                    <div className="relative h-48">
-                      <img
-                        src={`https://picsum.photos/seed/${c.seed}/600/400`}
-                        alt={c.name}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#10101c] via-transparent to-transparent" />
-                      <div className="absolute bottom-3 left-4 flex items-center gap-3">
-                        <div className="w-11 h-11 rounded-full border-2 border-zen-violet/50 overflow-hidden">
-                          <img
-                            src={`https://picsum.photos/seed/${c.seed}avatar/100/100`}
-                            alt=""
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-sm">{c.name}</p>
-                          <p className="text-zen-muted text-xs">{c.handle}</p>
-                        </div>
-                      </div>
-                      <div
-                        className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
-                        style={{
-                          background: "rgba(0,0,0,.6)",
-                          backdropFilter: "blur(6px)",
-                        }}
-                      >
-                        <iconify-icon
-                          icon={platformIcon(c.platform)}
-                          width="14"
-                          style={{ color: platformColor(c.platform) }}
-                        />
-                        {c.platform}
-                      </div>
-                    </div>
-                    <div className="p-5">
-                      <span className="inline-block text-xs font-medium px-2.5 py-1 rounded-full bg-zen-violet/15 text-zen-cyan mb-3">
-                        {c.niche}
-                      </span>
-                      <div className="flex items-center gap-5 text-sm">
-                        <div>
-                          <span className="font-semibold text-white">
-                            {c.followers}
-                          </span>{" "}
-                          <span className="text-zen-muted">abonnés</span>
-                        </div>
-                        <div>
-                          <span className="font-semibold text-white">
-                            {c.videos}
-                          </span>{" "}
-                          <span className="text-zen-muted">vidéos</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="text-center mt-14">
-                <button
-                  onClick={() => scrollTo("tarifs")}
-                  className="btn-cyan font-semibold px-8 py-3 rounded-xl"
-                >
-                  Créer ton influenceur IA
-                </button>
-              </div>
+          </div>
+          {/* Col 4 */}
+          <div>
+            <h4 className="font-semibold text-sm mb-4">Support</h4>
+            <div className="flex flex-col gap-2.5">
+              <a href="mailto:contact@zeno.ai?subject=Signaler%20un%20bug" target="_blank" rel="noopener noreferrer" className="text-zen-muted text-sm hover:text-zen-cyan transition-colors">Signaler un bug</a>
+              <a href="mailto:contact@zeno.ai?subject=Sugg%C3%A9rer%20une%20am%C3%A9lioration" target="_blank" rel="noopener noreferrer" className="text-zen-muted text-sm hover:text-zen-cyan transition-colors">Suggérer une amélioration</a>
+              <a href="mailto:contact@zeno.ai" target="_blank" rel="noopener noreferrer" className="text-sm transition-colors" style={{color:'#1D9E75'}} onMouseEnter={e=>e.currentTarget.style.color='#2bb88a'} onMouseLeave={e=>e.currentTarget.style.color='#1D9E75'}>contact@zeno.ai</a>
             </div>
-          </section>
-        );
+          </div>
+        </div>
+        <div className="border-t border-white/5 pt-6 text-center">
+          <p className="text-zen-muted/60 text-xs">© 2026 Zeno — Tous droits réservés · <a href="mailto:contact@zeno.ai" className="hover:text-zen-cyan transition-colors">contact@zeno.ai</a></p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ───── APP ───── */
+function App(){
+  const[active,setActive]=useState('accueil');
+  const[showModal,setShowModal]=useState(false);
+
+  useEffect(()=>{
+    const ids=['accueil','about','creations','tarifs'];
+    const visible=new Set();
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting) visible.add(e.target.id);
+        else visible.delete(e.target.id);
+      });
+      for(let i=ids.length-1;i>=0;i--){
+        if(visible.has(ids[i])){setActive(ids[i]);break;}
       }
+    },{threshold:.3});
+    ids.forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el)});
+    return()=>obs.disconnect();
+  },[]);
 
-      /* ───── PRICING ───── */
-      function PricingSection() {
-        const [annual, setAnnual] = useState(false);
-        const [faq, setFaq] = useState(null);
+  return(
+    <>
+      <Navbar active={active}/>
+      <main className="relative" style={{zIndex:1}}>
+        <HomeSection onDemo={()=>setShowModal(true)}/>
+        <AboutSection/>
+        <CreationsSection/>
+        <PricingSection/>
+      </main>
+      <Footer/>
+      {showModal&&<VideoModal onClose={()=>setShowModal(false)}/>}
+    </>
+  );
+}
 
-        const plans = [
-          {
-            name: "Starter",
-            tagline: "Pour découvrir sans engagement",
-            price: "Gratuit — pour toujours",
-            priceAnnual: null,
-            savings: null,
-            btn: "Commencer gratuitement",
-            btnBg: "#1D9E75",
-            features: [
-              "1 influenceur IA personnalisable",
-              "5 vidéos générées / mois",
-              "1 réseau social connecté",
-              "Qualité vidéo 720p",
-              "Publication manuelle",
-            ],
-          },
-          {
-            name: "Nova",
-            tagline: "Pour les créateurs sérieux",
-            popular: true,
-            price: "29€ / mois",
-            priceAnnual: "250€ / an",
-            savings: "✦ Économise 98€ — 3 mois offerts",
-            btn: "Choisir Nova",
-            btnBg: "#7b61ff",
-            features: [
-              "3 influenceurs IA",
-              "Personnalisation poussée avec l'IA",
-              "30 vidéos générées / mois",
-              "3 réseaux sociaux connectés",
-              "Qualité vidéo 1080p / 4K",
-              "Publication automatique",
-              "Analytics essentiels",
-            ],
-          },
-          {
-            name: "Stellar",
-            tagline: "Pour les agences et grandes marques",
-            price: "100€ / mois",
-            priceAnnual: "990€ / an",
-            savings: "✦ Économise 210€ — 2 mois offerts",
-            btn: "Choisir Stellar",
-            btnBg: "#C9A84C",
-            features: [
-              "50 influenceurs IA",
-              "250 vidéos générées / mois",
-              "Tous les réseaux connectés",
-              "Avatar IA ultra-personnalisé",
-              "Publication automatique avancée",
-              "Analytics avancés + export PDF/Excel",
-              "Accès API",
-              "Support prioritaire",
-            ],
-          },
-        ];
-
-        const tableRows = [
-          {
-            cat: "Influenceurs IA",
-            rows: [
-              ["Nombre d'influenceurs IA", "1", "3", "50"],
-              ["Personnalisation de base", "✓", "✓", "✓"],
-              ["Personnalisation poussée IA", "✗", "✓", "✓"],
-              ["Avatar ultra-personnalisé", "✗", "✗", "✓"],
-            ],
-          },
-          {
-            cat: "Vidéos",
-            rows: [
-              ["Vidéos générées / mois", "5", "30", "250"],
-              ["Qualité 720p", "✓", "✓", "✓"],
-              ["Qualité 1080p", "✗", "✓", "✓"],
-              ["Qualité 4K", "✗", "✓", "✓"],
-            ],
-          },
-          {
-            cat: "Publication",
-            rows: [
-              ["Réseaux sociaux connectés", "1", "3", "Tous"],
-              ["Publication manuelle", "✓", "✓", "✓"],
-              ["Publication automatique", "✗", "✓", "✓"],
-              ["Publication automatique avancée", "✗", "✗", "✓"],
-            ],
-          },
-          {
-            cat: "Analytics",
-            rows: [
-              ["Dashboard basique", "✓", "✓", "✓"],
-              ["Analytics essentiels", "✗", "✓", "✓"],
-              ["Analytics avancés", "✗", "✗", "✓"],
-              ["Export PDF / Excel", "✗", "✗", "✓"],
-            ],
-          },
-          {
-            cat: "Support",
-            rows: [
-              ["Support par email", "✓", "✓", "✓"],
-              ["Support prioritaire", "✗", "✗", "✓"],
-              ["Accès API", "✗", "✗", "✓"],
-              ["Facture entreprise", "✗", "✗", "✓"],
-            ],
-          },
-        ];
-
-        const faqs = [
-          {
-            q: "Est-ce que le plan Starter est vraiment gratuit pour toujours ?",
-            r: "Oui, sans limite de durée et sans carte bancaire. Tu peux utiliser le plan Starter indéfiniment.",
-          },
-          {
-            q: "Est-ce que je peux changer de plan à tout moment ?",
-            r: "Oui, depuis ton tableau de bord. Aucun engagement.",
-          },
-          {
-            q: "Quels moyens de paiement acceptez-vous ?",
-            r: "Carte bancaire (Visa, Mastercard), PayPal et virement pour Stellar.",
-          },
-          {
-            q: "Que se passe-t-il si j'annule ?",
-            r: "Tu repasses sur Starter. Tes données sont conservées.",
-          },
-          {
-            q: "Le plan Stellar convient-il aux entreprises ?",
-            r: "Oui, facture disponible pour chaque paiement.",
-          },
-        ];
-
-        const Check = ({ v }) => (
-          <span
-            className={
-              v === "✓"
-                ? "text-zen-green"
-                : v === "✗"
-                ? "text-red-400/60"
-                : "text-white font-medium"
-            }
-          >
-            {v}
-          </span>
-        );
-
-        return (
-          <section id="tarifs" className="relative py-20" style={{ zIndex: 1 }}>
-            <div className="max-w-6xl mx-auto px-5">
-              {/* Header */}
-              <div className="text-center max-w-3xl mx-auto mb-10">
-                <h2 className="text-2xl md:text-3xl font-bold mb-5">
-                  Un plan pour chaque créateur
-                </h2>
-                <p className="text-zen-muted text-lg">
-                  Commence gratuitement, évolue quand tu es prêt. Aucune carte
-                  bancaire requise pour démarrer.
-                </p>
-              </div>
-
-              {/* Toggle */}
-              <div className="flex items-center justify-center gap-4 mb-14">
-                <span
-                  className={`text-sm font-medium ${
-                    !annual ? "text-white" : "text-zen-muted"
-                  }`}
-                >
-                  Mensuel
-                </span>
-                <div
-                  className={`toggle-track ${annual ? "on" : ""}`}
-                  onClick={() => setAnnual(!annual)}
-                >
-                  <div className="toggle-dot" />
-                </div>
-                <span
-                  className={`text-sm font-medium ${
-                    annual ? "text-white" : "text-zen-muted"
-                  }`}
-                >
-                  Annuel
-                </span>
-                {annual && (
-                  <span className="text-xs font-semibold text-zen-green bg-zen-green/10 px-3 py-1 rounded-full ml-1">
-                    Économise jusqu'à 210€
-                  </span>
-                )}
-              </div>
-
-              {/* Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
-                {plans.map((p, i) => {
-                  const isPopular = !!p.popular;
-                  return (
-                    <div
-                      key={i}
-                      className={`rounded-2xl p-7 border relative flex flex-col ${
-                        isPopular ? "md:-mt-4 md:mb-0" : ""
-                      }`}
-                      style={{
-                        background: isPopular
-                          ? "#14143a"
-                          : "rgba(16,16,28,0.85)",
-                        borderColor: isPopular
-                          ? "#7b61ff"
-                          : "rgba(123,97,255,.15)",
-                        borderWidth: isPopular ? "1.5px" : "1px",
-                        boxShadow: isPopular
-                          ? "0 0 40px rgba(123,97,255,.12)"
-                          : "none",
-                      }}
-                    >
-                      {isPopular && (
-                        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-xs font-bold px-4 py-1 rounded-full bg-zen-violet text-white">
-                          ⭐ Le plus populaire
-                        </div>
-                      )}
-                      <h3 className="text-xl font-bold mb-1">{p.name}</h3>
-                      <p className="text-zen-muted text-sm mb-5">{p.tagline}</p>
-                      <p className="text-2xl font-bold mb-1">
-                        {annual && p.priceAnnual ? p.priceAnnual : p.price}
-                      </p>
-                      {annual && p.savings && (
-                        <p className="text-sm text-zen-cyan mb-5">
-                          {p.savings}
-                        </p>
-                      )}
-                      {!annual && <div className="mb-5" />}
-                      <ul className="space-y-3 mb-8 flex-1">
-                        {p.features.map((f, j) => (
-                          <li
-                            key={j}
-                            className="flex items-start gap-2.5 text-sm"
-                          >
-                            <iconify-icon
-                              icon="lucide:check"
-                              width="16"
-                              style={{
-                                color: p.btnBg,
-                                marginTop: 2,
-                                flexShrink: 0,
-                              }}
-                            />
-                            <span className="text-zen-muted">{f}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <button
-                        className="w-full py-3 rounded-xl text-white font-semibold text-sm transition-all hover:brightness-110"
-                        style={{ background: p.btnBg }}
-                      >
-                        {p.btn}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Comparison Table */}
-              <div className="mb-20">
-                <h2 className="text-center text-xl md:text-2xl font-bold mb-10">
-                  Comparer les plans en détail
-                </h2>
-                <div
-                  className="overflow-x-auto rounded-2xl border border-white/5"
-                  style={{ background: "rgba(16,16,28,0.6)" }}
-                >
-                  <table className="w-full min-w-[600px] text-sm">
-                    <thead>
-                      <tr className="border-b border-white/5">
-                        <th className="text-left py-4 px-5 text-zen-muted font-medium">
-                          Fonctionnalité
-                        </th>
-                        <th className="text-center py-4 px-4 font-semibold">
-                          Starter
-                        </th>
-                        <th className="text-center py-4 px-4 font-semibold text-zen-violet">
-                          Nova
-                        </th>
-                        <th className="text-center py-4 px-4 font-semibold text-zen-gold">
-                          Stellar
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {tableRows.map((cat, ci) => (
-                        <React.Fragment key={ci}>
-                          <tr>
-                            <td
-                              colSpan={4}
-                              className="py-3 px-5 text-xs font-bold text-zen-violet uppercase tracking-wider bg-zen-violet/5"
-                            >
-                              {cat.cat}
-                            </td>
-                          </tr>
-                          {cat.rows.map((r, ri) => (
-                            <tr
-                              key={ri}
-                              className="border-b border-white/5 hover:bg-white/[.02] transition-colors"
-                            >
-                              <td className="py-3 px-5 text-zen-muted">
-                                {r[0]}
-                              </td>
-                              <td className="py-3 px-4 text-center">
-                                <Check v={r[1]} />
-                              </td>
-                              <td className="py-3 px-4 text-center">
-                                <Check v={r[2]} />
-                              </td>
-                              <td className="py-3 px-4 text-center">
-                                <Check v={r[3]} />
-                              </td>
-                            </tr>
-                          ))}
-                        </React.Fragment>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* FAQ */}
-              <div className="max-w-3xl mx-auto mb-10">
-                <h2 className="text-center text-xl md:text-2xl font-bold mb-10">
-                  Tu as des questions ? On a les réponses.
-                </h2>
-                <div className="space-y-3">
-                  {faqs.map((f, i) => (
-                    <div
-                      key={i}
-                      className="rounded-xl border border-white/5 overflow-hidden"
-                      style={{ background: "rgba(16,16,28,0.6)" }}
-                    >
-                      <button
-                        className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-white/[.02] transition-colors"
-                        onClick={() => setFaq(faq === i ? null : i)}
-                      >
-                        <span className="font-medium text-sm pr-4">{f.q}</span>
-                        <iconify-icon
-                          icon="lucide:chevron-down"
-                          width="18"
-                          style={{
-                            color: "#a0a0b0",
-                            transition: "transform .3s",
-                            transform:
-                              faq === i ? "rotate(180deg)" : "rotate(0)",
-                          }}
-                        />
-                      </button>
-                      <div
-                        className={`overflow-hidden transition-all duration-300 ${
-                          faq === i
-                            ? "max-h-40 opacity-100"
-                            : "max-h-0 opacity-0"
-                        }`}
-                      >
-                        <p className="px-6 pb-4 text-zen-muted text-sm leading-relaxed">
-                          {f.r}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <Banner
-              title="Lance-toi aujourd'hui — c'est gratuit."
-              subtitle="Crée ton premier influenceur IA en moins de 10 minutes. Aucune carte bancaire requise."
-              btn1="Commencer gratuitement"
-              btn2={null}
-              onBtn1={() => scrollTo("tarifs")}
-            />
-          </section>
-        );
-      }
-
-      /* ───── FOOTER ───── */
-      function Footer() {
-        return (
-          <footer
-            className="relative border-t border-white/5"
-            style={{ zIndex: 1, background: "#060610" }}
-          >
-            <div className="max-w-6xl mx-auto px-5 py-14">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-                {/* Col 1 */}
-                <div>
-                  <img
-                    src="/logo.png"
-                    alt="Zeno"
-                    className="h-7 object-contain mb-4"
-                    onError={(e) => {
-                      e.target.style.display = "none";
-                      const s = document.createElement("span");
-                      s.textContent = "ZENO";
-                      s.style.cssText =
-                        "font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#7b61ff;letter-spacing:2px";
-                      e.target.parentNode.insertBefore(s, e.target);
-                    }}
-                  />
-                  <p className="text-zen-muted text-sm mb-2">
-                    La plateforme des influenceurs IA
-                  </p>
-                  <p className="text-zen-muted/60 text-xs">© 2026 Zeno</p>
-                </div>
-                {/* Col 2 */}
-                <div>
-                  <h4 className="font-semibold text-sm mb-4">Navigation</h4>
-                  <div className="flex flex-col gap-2.5">
-                    {[
-                      ["accueil", "Accueil"],
-                      ["about", "À propos"],
-                      ["creations", "Créations"],
-                      ["tarifs", "Tarifs"],
-                    ].map(([id, label]) => (
-                      <button
-                        key={id}
-                        onClick={() => scrollTo(id)}
-                        className="text-zen-muted text-sm hover:text-zen-cyan transition-colors text-left"
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                {/* Col 3 */}
-                <div>
-                  <h4 className="font-semibold text-sm mb-4">Nous suivre</h4>
-                  <div className="flex flex-col gap-2.5">
-                    {[
-                      ["https://tiktok.com", "TikTok", "ic:baseline-tiktok"],
-                      ["https://instagram.com", "Instagram", "mdi:instagram"],
-                      ["https://youtube.com", "YouTube", "mdi:youtube"],
-                      ["https://linkedin.com", "LinkedIn", "mdi:linkedin"],
-                    ].map(([url, label, icon]) => (
-                      <a
-                        key={label}
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-zen-muted text-sm hover:text-zen-cyan transition-colors"
-                      >
-                        <iconify-icon icon={icon} width="16" />
-                        {label}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-                {/* Col 4 */}
-                <div>
-                  <h4 className="font-semibold text-sm mb-4">Support</h4>
-                  <div className="flex flex-col gap-2.5">
-                    <a
-                      href="mailto:contact@zeno.ai?subject=Signaler%20un%20bug"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-zen-muted text-sm hover:text-zen-cyan transition-colors"
-                    >
-                      Signaler un bug
-                    </a>
-                    <a
-                      href="mailto:contact@zeno.ai?subject=Sugg%C3%A9rer%20une%20am%C3%A9lioration"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-zen-muted text-sm hover:text-zen-cyan transition-colors"
-                    >
-                      Suggérer une amélioration
-                    </a>
-                    <a
-                      href="mailto:contact@zeno.ai"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm transition-colors"
-                      style={{ color: "#1D9E75" }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.color = "#2bb88a")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.color = "#1D9E75")
-                      }
-                    >
-                      contact@zeno.ai
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div className="border-t border-white/5 pt-6 text-center">
-                <p className="text-zen-muted/60 text-xs">
-                  © 2026 Zeno — Tous droits réservés ·{" "}
-                  <a
-                    href="mailto:contact@zeno.ai"
-                    className="hover:text-zen-cyan transition-colors"
-                  >
-                    contact@zeno.ai
-                  </a>
-                </p>
-              </div>
-            </div>
-          </footer>
-        );
-      }
-
-      /* ───── APP ───── */
-      function App() {
-        const [active, setActive] = useState("accueil");
-        const [showModal, setShowModal] = useState(false);
-
-        useEffect(() => {
-          const ids = ["accueil", "about", "creations", "tarifs"];
-          const visible = new Set();
-          const obs = new IntersectionObserver(
-            (entries) => {
-              entries.forEach((e) => {
-                if (e.isIntersecting) visible.add(e.target.id);
-                else visible.delete(e.target.id);
-              });
-              for (let i = ids.length - 1; i >= 0; i--) {
-                if (visible.has(ids[i])) {
-                  setActive(ids[i]);
-                  break;
-                }
-              }
-            },
-            { threshold: 0.3 }
-          );
-          ids.forEach((id) => {
-            const el = document.getElementById(id);
-            if (el) obs.observe(el);
-          });
-          return () => obs.disconnect();
-        }, []);
-
-        return (
-          <>
-            <Navbar active={active} />
-            <main className="relative" style={{ zIndex: 1 }}>
-              <HomeSection onDemo={() => setShowModal(true)} />
-              <AboutSection />
-              <CreationsSection />
-              <PricingSection />
-            </main>
-            <Footer />
-            {showModal && <VideoModal onClose={() => setShowModal(false)} />}
-          </>
-        );
-      }
-
-      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-    </script>
-  </body>
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
 </html>
